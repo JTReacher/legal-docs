@@ -1,0 +1,29 @@
+{
+  "app": {
+    "name": "Strong Clone",
+    "description": "provides workout tracking functionality, allowing users to log exercises, sets, reps, and weights to monitor their fitness progress over time",
+    "audience": "fitness enthusiasts and individuals who want to track their strength training workouts",
+    "ios_version": "15.0",
+    "android_version": "8.0"
+  },
+  "company": {
+    "name": "John Theodore Reacher",
+    "trading_as": "TeapotSoftware",
+    "email": "teapotsoft@outlook.com",
+    "location": "United Kingdom",
+    "jurisdiction": "England and Wales"
+  },
+  "features": {
+    "subscriptions": true,
+    "in_app_purchases": false,
+    "health_data": true,
+    "user_content": true,
+    "minimum_age": 13,
+    "parental_consent_required": false
+  },
+  "subscription": {
+    "billing_cycle": "monthly or annual"
+  },
+  "privacy_policy_url": "https://teapotsoftware.github.io/legal-docs/privacy-policy.html",
+  "last_updated": "26 January 2026"
+}
