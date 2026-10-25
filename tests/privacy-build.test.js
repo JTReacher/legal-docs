@@ -447,6 +447,7 @@ test('advertising block -> names provider, advertising ID and consent withdrawal
       provider: 'Google AdMob',
       policy_url: 'https://policies.google.com/technologies/ads',
       withdraw_consent: 'Open Settings, then Privacy options, to change or withdraw ad consent.',
+      location: 'United States',
     };
   });
 
@@ -475,7 +476,7 @@ test('validatePrivacyConfig throws naming withdraw_consent when advertising lack
 test('analytics false with advertising -> does not claim there is no advertising', () => {
   const html = render((c) => {
     c.privacy.analytics = false;
-    c.privacy.advertising = { provider: 'Google AdMob', withdraw_consent: 'Use Privacy options.' };
+    c.privacy.advertising = { provider: 'Google AdMob', withdraw_consent: 'Use Privacy options.', policy_url: 'https://x.example', location: 'United States' };
   });
 
   assert.ok(!/no analytics, advertising/i.test(html), 'claims no advertising while ads are on');
@@ -566,3 +567,31 @@ for (const file of fs.readdirSync(REAL_CONFIGS_DIR).filter((f) => f.endsWith('.j
     assert.ok(fs.existsSync(path.join(ROOT, 'privacy', 'generated', `${slug}.html`)));
   });
 }
+
+// Test: an advertising block must name a policy URL and processing location
+// Pins: ad-supported policies always link Google's data use and state the transfer location
+// Green when: advertising without policy_url, or without location, makes validatePrivacyConfig throw naming that field
+// Benefit: an AdMob app cannot publish a policy missing Google's required disclosures
+for (const field of ['policy_url', 'location']) {
+  test(`validatePrivacyConfig throws naming ${field} when advertising lacks it`, () => {
+    const ads = { provider: 'Google AdMob', withdraw_consent: 'Use Privacy options.', policy_url: 'https://x.example', location: 'United States' };
+    delete ads[field];
+    const config = withConfig((c) => { c.privacy.advertising = ads; });
+
+    assert.throws(() => load().validatePrivacyConfig(config), namesField(field));
+  });
+}
+
+// Test: the advertising section states consent as its legal basis and shows the location
+// Pins: ad processing is disclosed as consent-based with where it happens
+// Green when: output's advertising section mentions consent and the configured location
+// Benefit: UK GDPR and PECR require consent for ad tracking, and users see where data goes
+test('advertising section states consent basis and location', () => {
+  const html = render((c) => {
+    c.privacy.advertising = { provider: 'Google AdMob', withdraw_consent: 'Use Privacy options.', policy_url: 'https://x.example', location: 'United States' };
+  });
+  const adSection = html.split(/<h2>Advertising<\/h2>/)[1].split('<h2>')[0];
+
+  assert.match(adSection, /only with (the User's|your) consent/i);
+  assert.ok(adSection.includes('United States'), 'missing location');
+});
