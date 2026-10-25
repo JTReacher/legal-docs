@@ -290,6 +290,41 @@ function changesSection() {
     section('Information not contained in this policy', para(C.NOT_CONTAINED));
 }
 
+/** Wraps rendered sections in the HTML page; both arguments must already be escaped. */
+function pageShell(appName, lastUpdated, body) {
+  return `<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - ${appName}</title>
+  <meta name="description" content="Privacy Policy for the ${appName} app">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333; background: #fff; margin: 0; }
+    .container { max-width: 800px; margin: 0 auto; padding: 2rem 1rem; }
+    h1 { color: #1a1a2e; }
+    h2 { color: #16213e; margin-top: 2.5rem; border-bottom: 1px solid #e9ecef; padding-bottom: 0.5rem; }
+    .meta { color: #666; font-size: 0.875rem; }
+    table { border-collapse: collapse; width: 100%; display: block; overflow-x: auto; }
+    th, td { border: 1px solid #e9ecef; padding: 0.5rem; text-align: left; vertical-align: top; }
+    th { background: #f8f9fa; }
+    a { color: #0f3460; }
+  </style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>Privacy Policy</h1>
+  <p>${appName}</p>
+  <p class="meta">Last updated: ${lastUpdated}</p>
+</header>
+
+${body}
+</div>
+</body>
+</html>
+`;
+}
 function renderPrivacy(config) {
   validatePrivacyConfig(config);
   const { privacy } = config;
@@ -317,39 +352,9 @@ function renderPrivacy(config) {
     .filter(Boolean)
     .join('\n\n');
 
-  return `<!DOCTYPE html>
-<html lang="en-GB">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Policy - ${appName}</title>
-  <meta name="description" content="Privacy Policy for the ${appName} app">
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333; background: #fff; margin: 0; }
-    .container { max-width: 800px; margin: 0 auto; padding: 2rem 1rem; }
-    h1 { color: #1a1a2e; }
-    h2 { color: #16213e; margin-top: 2.5rem; border-bottom: 1px solid #e9ecef; padding-bottom: 0.5rem; }
-    .meta { color: #666; font-size: 0.875rem; }
-    table { border-collapse: collapse; width: 100%; display: block; overflow-x: auto; }
-    th, td { border: 1px solid #e9ecef; padding: 0.5rem; text-align: left; vertical-align: top; }
-    th { background: #f8f9fa; }
-    a { color: #0f3460; }
-  </style>
-</head>
-<body>
-<div class="container">
-<header>
-  <h1>Privacy Policy</h1>
-  <p>${appName}</p>
-  <p class="meta">Last updated: ${escapeHtml(config.last_updated)}</p>
-</header>
-
-${body}
-</div>
-</body>
-</html>
-`;
+  return pageShell(appName, escapeHtml(config.last_updated), body);
 }
+
 
 function readConfig(slug) {
   return JSON.parse(fs.readFileSync(path.join(CONFIGS_DIR, `${slug}.json`), 'utf8'));
