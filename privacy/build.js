@@ -29,6 +29,22 @@ const PROCESSOR_FIELDS = ['name', 'purpose', 'location'];
 const SERVICE_FIELDS = ['name', 'purpose', 'data_sent'];
 const PERMISSION_FIELDS = ['name', 'reason'];
 const ADVERTISING_FIELDS = ['provider', 'withdraw_consent'];
+const BOOLEAN_KEYS = ['analytics', 'automated_decisions', 'data_optional'];
+const PRIVACY_KEYS = [
+  'contact_email', 'deletion_url', 'deletion_note', 'summary', 'data', 'processors',
+  'third_party_services', 'permissions', 'advertising', 'backups', ...BOOLEAN_KEYS,
+];
+
+function checkKeys(privacy) {
+  for (const key of Object.keys(privacy)) {
+    if (!PRIVACY_KEYS.includes(key)) throw new Error(`privacy.${key} is not a known key`);
+  }
+  for (const key of BOOLEAN_KEYS) {
+    if (key in privacy && typeof privacy[key] !== 'boolean') {
+      throw new Error(`privacy.${key} must be true or false`);
+    }
+  }
+}
 const ICO_COMPLAINT_URL = 'https://ico.org.uk/make-a-complaint/';
 
 function escapeHtml(value) {
@@ -62,6 +78,7 @@ function validatePrivacyConfig(config) {
   requireString(config.app, 'name', 'app');
   requireString(config.company, 'name', 'company');
   requireString(config, 'last_updated', 'config');
+  checkKeys(privacy);
   requireString(privacy, 'contact_email', 'privacy');
   if (!Array.isArray(privacy.data) || privacy.data.length === 0) {
     throw new Error('privacy.data must list at least one data item');
@@ -114,7 +131,7 @@ function dataSection(privacy) {
   const table =
     '<table>\n  <tr><th>Data</th><th>Purpose</th><th>Legal basis</th><th>Place of processing</th><th>Retention time</th></tr>\n' +
     `${rows}\n</table>`;
-  return section('Types of Data collected and how they are processed', table + '\n' + para(C.PROVISION_OF_DATA) + '\n' + para(C.THIRD_PARTY_DATA));
+  return section('Types of Data collected and how they are processed', table + '\n' + para(privacy.data_optional ? C.OPTIONAL_DATA : C.MANDATORY_DATA) + '\n' + para(C.THIRD_PARTY_DATA));
 }
 
 function processingSection() {

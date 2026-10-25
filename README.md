@@ -146,7 +146,7 @@ Each app gets its own privacy page, built from the `privacy` block in its
 ```bash
 node privacy/build.js            # every config with a privacy block
 node privacy/build.js bin-rota   # one app
-node --test tests/               # generator tests
+node --test                      # generator tests
 ```
 
 ## Contact

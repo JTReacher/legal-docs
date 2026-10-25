@@ -16,7 +16,13 @@ const THIRD_PARTY_DATA =
   'Users are responsible for any third-party Personal Data obtained, published or shared through ' +
   'this Application.';
 
-const PROVISION_OF_DATA =
+const MANDATORY_DATA =
+  'Unless specified otherwise, all Data requested by this Application is mandatory and failure to ' +
+  'provide this Data may make it impossible for this Application to provide its services. In cases ' +
+  'where this Application specifically states that some Data is not mandatory, Users are free not to ' +
+  'communicate this Data without consequences to the availability or the functioning of the Service.';
+
+const OPTIONAL_DATA =
   'Users are not obliged to provide any Data. Where this Application needs some Data for a feature, ' +
   'failing to provide it may make that feature impossible to use.';
 
@@ -99,7 +105,8 @@ const NOT_CONTAINED =
 module.exports = {
   METHODS_OF_PROCESSING,
   THIRD_PARTY_DATA,
-  PROVISION_OF_DATA,
+  MANDATORY_DATA,
+  OPTIONAL_DATA,
   HANDLING_PAYMENTS,
   ADVERTISING,
   ADVERTISING_ID_RESET,
