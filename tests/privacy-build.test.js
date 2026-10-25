@@ -398,12 +398,28 @@ test('automated_decisions false -> states no automated decision-making; absent -
   assert.ok(!/automated decision-making/i.test(off), 'statement should be absent when not configured');
 });
 
-// Test: the policy says whether providing data is required
-// Pins: Article 13(2)(e) disclosure of whether data is mandatory and what happens if it is withheld
-// Green when: output contains the template sentence about Users not being obliged to provide Data
-// Benefit: users know they can leave fields out and what they lose by doing so
-test('always states whether providing Data is required', () => {
-  assert.match(render(), /Users are not obliged to provide/);
+// Test: by default the policy uses the template's "mandatory unless specified" wording
+// Pins: Article 13(2)(e) disclosure never claims data is optional unless the config says so
+// Green when: without data_optional, output says Data is mandatory unless specified and does not say Users are not obliged
+// Benefit: apps that need an account or payment never publish a false "optional" claim
+test('default -> states Data is mandatory unless specified otherwise', () => {
+  const html = render();
+
+  assert.match(html, /Unless specified otherwise, all Data requested by this Application is mandatory/);
+  assert.ok(!/Users are not obliged to provide/.test(html), 'must not claim data is optional');
+});
+
+// Test: data_optional true states Users are not obliged to provide Data
+// Pins: apps where every field is optional can say so
+// Green when: data_optional true gives the "not obliged" sentence and not the mandatory one
+// Benefit: on-device apps tell users they can leave anything out
+test('data_optional true -> states Users are not obliged to provide Data', () => {
+  const html = render((c) => {
+    c.privacy.data_optional = true;
+  });
+
+  assert.match(html, /Users are not obliged to provide/);
+  assert.ok(!/all Data requested by this Application is mandatory/.test(html), 'mandatory wording should be absent');
 });
 
 // Test: a one-time in-app purchase adds a Payments section without a Subscriptions heading
@@ -472,3 +488,81 @@ test('analytics false with advertising -> does not claim there is no advertising
 test('no advertising block -> no Advertising heading', () => {
   assert.doesNotMatch(render(), /<h[1-6][^>]*>\s*Advertising\s*<\/h[1-6]>/i);
 });
+
+const HOSTILE = '<script>alert(1)</script>';
+const withOptionalBlocks = (value) => (c) => {
+  c.privacy.summary = [value];
+  c.privacy.permissions = [{ name: 'Contacts', reason: value }];
+  c.privacy.third_party_services = [{ name: 'Council', purpose: 'Dates', data_sent: value }];
+  c.privacy.backups = value;
+  c.privacy.deletion_note = value;
+};
+
+// Test: optional blocks (summary, permissions, services, backups, deletion_note) render their text
+// Pins: every optional config block reaches the published page
+// Green when: a marker string set in each block appears five times in the output
+// Benefit: an app's specific disclosures are never silently dropped
+test('summary, permissions, third_party_services, backups and deletion_note all render', () => {
+  const html = render(withOptionalBlocks('MARKER-123'));
+
+  assert.strictEqual(html.split('MARKER-123').length - 1, 5);
+  assert.match(html, /<h[1-6][^>]*>Device permissions/);
+  assert.match(html, /<h[1-6][^>]*>Services the app contacts/);
+});
+
+// Test: optional blocks are HTML-escaped
+// Pins: markup in any optional block is rendered as text
+// Green when: no raw <script> appears and the escaped form appears in each of the five blocks
+// Benefit: a careless config value cannot inject script into the published page
+test('optional blocks are HTML-escaped', () => {
+  const html = render(withOptionalBlocks(HOSTILE));
+
+  assert.ok(!html.includes('<script>'), 'raw <script> must not appear');
+  assert.strictEqual(html.split('&lt;script&gt;').length - 1, 5);
+});
+
+// Test: analytics false without ads states there are no analytics, ads or trackers
+// Pins: the no-tracking statement appears when the config asserts it
+// Green when: analytics false gives the "no analytics, advertising" sentence; absent gives none
+// Benefit: Play reviewers and users see the app's no-tracking claim
+test('analytics false -> no-tracking statement; absent -> none', () => {
+  assert.match(render((c) => { c.privacy.analytics = false; }), /no analytics, advertising/);
+  assert.ok(!/no analytics, advertising/.test(render()), 'statement without config');
+});
+
+// Test: unknown keys under privacy are rejected
+// Pins: a misspelt block name fails the build instead of dropping a section
+// Green when: a privacy key "third_party_service" makes validatePrivacyConfig throw naming it
+// Benefit: a legal page never silently loses a disclosure
+test('validatePrivacyConfig rejects unknown privacy keys', () => {
+  const config = withConfig((c) => {
+    c.privacy.third_party_service = [];
+  });
+
+  assert.throws(() => load().validatePrivacyConfig(config), namesField('third_party_service'));
+});
+
+// Test: boolean flags must be booleans
+// Pins: "false" as a string is rejected for analytics, automated_decisions and data_optional
+// Green when: each flag set to the string "false" makes validatePrivacyConfig throw naming it
+// Benefit: a typo cannot flip a statement on or off without anyone noticing
+for (const flag of ['analytics', 'automated_decisions', 'data_optional']) {
+  test(`validatePrivacyConfig rejects a non-boolean ${flag}`, () => {
+    const config = withConfig((c) => {
+      c.privacy[flag] = 'false';
+    });
+
+    assert.throws(() => load().validatePrivacyConfig(config), namesField(flag));
+  });
+}
+
+// Test: every eula config's privacy_policy_url has a page in privacy/generated
+// Pins: no EULA links to a privacy page this repo does not publish
+// Green when: privacy/generated/<slug>.html exists for every eula config
+// Benefit: store listings and EULAs never point at a 404
+for (const file of fs.readdirSync(REAL_CONFIGS_DIR).filter((f) => f.endsWith('.json'))) {
+  const slug = file.replace(/\.json$/, '');
+  test(`privacy page exists for eula config ${slug}`, () => {
+    assert.ok(fs.existsSync(path.join(ROOT, 'privacy', 'generated', `${slug}.html`)));
+  });
+}
