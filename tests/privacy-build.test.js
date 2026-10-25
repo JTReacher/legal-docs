@@ -381,3 +381,27 @@ test('HTML-escapes config strings', () => {
   assert.ok(html.includes('&lt;script&gt;'), 'expected escaped script tag');
   assert.ok(!html.includes('<script>'), 'raw <script> must not appear');
 });
+
+// Test: automated_decisions false states that no automated decision-making takes place
+// Pins: Article 13(2)(f) disclosure is made when the app makes no automated decisions
+// Green when: output mentions "automated decision-making" only when privacy.automated_decisions is false
+// Benefit: the policy covers every Article 13 item without claiming it for apps that have not checked
+test('automated_decisions false -> states no automated decision-making; absent -> silent', () => {
+  const on = render((c) => {
+    c.privacy.automated_decisions = false;
+  });
+  const off = render((c) => {
+    delete c.privacy.automated_decisions;
+  });
+
+  assert.ok(/no automated decision-making/i.test(on), 'missing automated decision-making statement');
+  assert.ok(!/automated decision-making/i.test(off), 'statement should be absent when not configured');
+});
+
+// Test: the policy says whether providing data is required
+// Pins: Article 13(2)(e) disclosure of whether data is mandatory and what happens if it is withheld
+// Green when: output contains the template sentence about Users not being obliged to provide Data
+// Benefit: users know they can leave fields out and what they lose by doing so
+test('always states whether providing Data is required', () => {
+  assert.match(render(), /Users are not obliged to provide/);
+});
