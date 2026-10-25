@@ -41,11 +41,12 @@ const ADVERTISING =
   'This type of service allows User Data to be utilised for advertising communication purposes. These ' +
   'communications are displayed in the form of banners and other advertisements on this Application, ' +
   'possibly based on User interests. The ad service may use Trackers and the unique device identifier ' +
-  'for advertising (the Google advertising ID, or IDFA on iOS).';
+  'for advertising (the Google advertising ID, or IDFA on iOS). Personalised ads and the Trackers ' +
+  "behind them are used only with the User's consent, asked for when this Application first opens.";
 
 const ADVERTISING_ID_RESET =
   'Users can also reset or delete their advertising ID, or opt out of personalised ads, in their ' +
-  "device's settings (on Android: Settings, Google, Ads).";
+  "device's settings (on Android, under Ads in the privacy or Google settings; on iOS, under Privacy, Tracking).";
 
 const LEGAL_BASES = [
   'Users have given their consent for one or more specific purposes;',

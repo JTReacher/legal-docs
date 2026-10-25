@@ -28,7 +28,7 @@ const DATA_FIELDS = ['type', 'purpose', 'lawful_basis', 'storage', 'retention'];
 const PROCESSOR_FIELDS = ['name', 'purpose', 'location'];
 const SERVICE_FIELDS = ['name', 'purpose', 'data_sent'];
 const PERMISSION_FIELDS = ['name', 'reason'];
-const ADVERTISING_FIELDS = ['provider', 'withdraw_consent'];
+const ADVERTISING_FIELDS = ['provider', 'withdraw_consent', 'policy_url', 'location'];
 const BOOLEAN_KEYS = ['analytics', 'automated_decisions', 'data_optional'];
 const PRIVACY_KEYS = [
   'contact_email', 'deletion_url', 'deletion_note', 'summary', 'data', 'processors',
@@ -220,12 +220,14 @@ function analyticsSection(privacy) {
 function advertisingSection(privacy) {
   const ads = privacy.advertising;
   if (!ads) return '';
-  const policy = ads.policy_url ? ` (${link(ads.policy_url, 'privacy policy')})` : '';
   return section(
     'Advertising',
     para(C.ADVERTISING) +
       '\n' +
-      para(`Ad service: <strong>${escapeHtml(ads.provider)}</strong>${policy}.`) +
+      para(
+        `Ad service: <strong>${escapeHtml(ads.provider)}</strong> (${link(ads.policy_url, 'how it uses data')}). ` +
+          `Place of processing: ${escapeHtml(ads.location)}.`
+      ) +
       '\n' +
       para(`<strong>Withdrawing consent:</strong> ${escapeHtml(ads.withdraw_consent)}`) +
       '\n' +

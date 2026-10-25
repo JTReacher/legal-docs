@@ -141,7 +141,7 @@ Each app gets its own privacy page, built from the `privacy` block in its
   adds the store payments section; list RevenueCat or Paddle under
   `privacy.processors`. Ads: add `privacy.advertising` with `provider` (e.g.
   Google AdMob), `withdraw_consent` (how to reopen the UMP privacy options) and
-  optional `policy_url`; the build fails if `withdraw_consent` is missing.
+  `policy_url` and `location`; the build fails if any is missing.
 
 ```bash
 node privacy/build.js            # every config with a privacy block
