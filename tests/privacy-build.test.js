@@ -405,3 +405,70 @@ test('automated_decisions false -> states no automated decision-making; absent -
 test('always states whether providing Data is required', () => {
   assert.match(render(), /Users are not obliged to provide/);
 });
+
+// Test: a one-time in-app purchase adds a Payments section without a Subscriptions heading
+// Pins: one-off unlocks (no subscription) still explain that the store handles payment
+// Green when: in_app_purchases true and subscriptions false gives a Payments heading naming Google Play, and no Subscriptions heading
+// Benefit: a "Pro unlock" app discloses purchase data without describing renewals it does not have
+test('in_app_purchases only -> Payments heading, Google Play named, no Subscriptions heading', () => {
+  const html = render((c) => {
+    c.features.subscriptions = false;
+    c.features.in_app_purchases = true;
+  });
+
+  assert.match(html, /<h[1-6][^>]*>[^<]*Payments[^<]*<\/h[1-6]>/i);
+  assert.ok(html.includes('Google Play'), 'missing "Google Play"');
+  assert.doesNotMatch(html, /<h[1-6][^>]*>[^<]*Subscriptions/i);
+});
+
+// Test: an advertising block names the ad network, the advertising ID and how to withdraw consent
+// Pins: ad-supported apps disclose AdMob, the advertising identifier and the privacy options route
+// Green when: output has an Advertising heading, the provider name, "advertising ID", and the consent withdrawal text from config
+// Benefit: Play and UK GDPR both require users to be told about ad tracking and how to opt out
+test('advertising block -> names provider, advertising ID and consent withdrawal', () => {
+  const html = render((c) => {
+    c.privacy.advertising = {
+      provider: 'Google AdMob',
+      policy_url: 'https://policies.google.com/technologies/ads',
+      withdraw_consent: 'Open Settings, then Privacy options, to change or withdraw ad consent.',
+    };
+  });
+
+  assert.match(html, /<h[1-6][^>]*>[^<]*Advertising[^<]*<\/h[1-6]>/i);
+  assert.ok(html.includes('Google AdMob'), 'missing provider');
+  assert.match(html, /advertising ID/i);
+  assert.ok(html.includes('Privacy options, to change or withdraw ad consent'), 'missing withdraw text');
+});
+
+// Test: an advertising block without withdraw_consent is rejected
+// Pins: an ad-supported policy always says how to withdraw consent
+// Green when: validatePrivacyConfig throws naming withdraw_consent
+// Benefit: no ad-supported app ships a policy without the opt-out route
+test('validatePrivacyConfig throws naming withdraw_consent when advertising lacks it', () => {
+  const config = withConfig((c) => {
+    c.privacy.advertising = { provider: 'Google AdMob' };
+  });
+
+  assert.throws(() => load().validatePrivacyConfig(config), namesField('withdraw_consent'));
+});
+
+// Test: with ads, the "no advertising" claim is never made even when analytics is false
+// Pins: the no-tracking statement only covers what is actually absent
+// Green when: analytics false plus an advertising block gives no "no analytics, advertising" wording
+// Benefit: the policy never contradicts itself about ads
+test('analytics false with advertising -> does not claim there is no advertising', () => {
+  const html = render((c) => {
+    c.privacy.analytics = false;
+    c.privacy.advertising = { provider: 'Google AdMob', withdraw_consent: 'Use Privacy options.' };
+  });
+
+  assert.ok(!/no analytics, advertising/i.test(html), 'claims no advertising while ads are on');
+});
+
+// Test: without an advertising block there is no Advertising heading
+// Pins: ad wording only appears for apps with ads
+// Green when: no heading equal to "Advertising" is in the output
+// Benefit: an ad-free app's policy does not describe ad tracking
+test('no advertising block -> no Advertising heading', () => {
+  assert.doesNotMatch(render(), /<h[1-6][^>]*>\s*Advertising\s*<\/h[1-6]>/i);
+});
