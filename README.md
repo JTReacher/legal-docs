@@ -137,6 +137,12 @@ Each app gets its own privacy page, built from the `privacy` block in its
   contacted, processors, backups, deletion) around those clauses. Every config
   value is HTML-escaped; a config with a missing field fails the build.
 
+- Money: `features.in_app_purchases` (one-time unlock) or `features.subscriptions`
+  adds the store payments section; list RevenueCat or Paddle under
+  `privacy.processors`. Ads: add `privacy.advertising` with `provider` (e.g.
+  Google AdMob), `withdraw_consent` (how to reopen the UMP privacy options) and
+  optional `policy_url`; the build fails if `withdraw_consent` is missing.
+
 ```bash
 node privacy/build.js            # every config with a privacy block
 node privacy/build.js bin-rota   # one app

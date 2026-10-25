@@ -28,6 +28,7 @@ const DATA_FIELDS = ['type', 'purpose', 'lawful_basis', 'storage', 'retention'];
 const PROCESSOR_FIELDS = ['name', 'purpose', 'location'];
 const SERVICE_FIELDS = ['name', 'purpose', 'data_sent'];
 const PERMISSION_FIELDS = ['name', 'reason'];
+const ADVERTISING_FIELDS = ['provider', 'withdraw_consent'];
 const ICO_COMPLAINT_URL = 'https://ico.org.uk/make-a-complaint/';
 
 function escapeHtml(value) {
@@ -69,6 +70,9 @@ function validatePrivacyConfig(config) {
   requireItems(privacy.processors, PROCESSOR_FIELDS, 'privacy.processors');
   requireItems(privacy.third_party_services, SERVICE_FIELDS, 'privacy.third_party_services');
   requireItems(privacy.permissions, PERMISSION_FIELDS, 'privacy.permissions');
+  if (privacy.advertising !== undefined) {
+    ADVERTISING_FIELDS.forEach((f) => requireString(privacy.advertising, f, 'privacy.advertising'));
+  }
   return config;
 }
 
@@ -190,9 +194,25 @@ function processorsSection(privacy) {
 
 function analyticsSection(privacy) {
   if (privacy.analytics !== false) return '';
+  const text = privacy.advertising
+    ? 'This Application contains no analytics or crash-reporting services. Advertising is described below.'
+    : 'This Application contains no analytics, advertising, crash-reporting or tracking services, and uses no Trackers.';
+  return section(privacy.advertising ? 'Analytics' : 'Analytics and advertising', para(text));
+}
+
+function advertisingSection(privacy) {
+  const ads = privacy.advertising;
+  if (!ads) return '';
+  const policy = ads.policy_url ? ` (${link(ads.policy_url, 'privacy policy')})` : '';
   return section(
-    'Analytics and advertising',
-    para('This Application contains no analytics, advertising, crash-reporting or tracking services, and uses no Trackers.')
+    'Advertising',
+    para(C.ADVERTISING) +
+      '\n' +
+      para(`Ad service: <strong>${escapeHtml(ads.provider)}</strong>${policy}.`) +
+      '\n' +
+      para(`<strong>Withdrawing consent:</strong> ${escapeHtml(ads.withdraw_consent)}`) +
+      '\n' +
+      para(C.ADVERTISING_ID_RESET)
   );
 }
 
@@ -202,14 +222,10 @@ function automatedDecisionsSection(privacy) {
 }
 
 function paymentsSection(config) {
-  if (!config.features || !config.features.subscriptions) return '';
-  return section(
-    'Payments and Subscriptions',
-    para(
-      'Purchases and subscriptions are handled by Google Play or the Apple App Store. ' +
-        'We never see or store your card details; we only receive confirmation of what you have bought.'
-    )
-  );
+  const features = config.features || {};
+  if (!features.subscriptions && !features.in_app_purchases) return '';
+  const title = features.subscriptions ? 'Payments and Subscriptions' : 'Payments';
+  return section(title, para(C.HANDLING_PAYMENTS));
 }
 
 function notesSection(title, text) {
@@ -272,6 +288,7 @@ function renderPrivacy(config) {
     servicesSection(privacy),
     processorsSection(privacy),
     analyticsSection(privacy),
+    advertisingSection(privacy),
     automatedDecisionsSection(privacy),
     paymentsSection(config),
     notesSection('Backups', privacy.backups),

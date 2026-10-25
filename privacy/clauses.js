@@ -24,6 +24,23 @@ const NO_AUTOMATED_DECISIONS =
   'This Application carries out no automated decision-making, including profiling, that produces ' +
   'legal or similarly significant effects for Users.';
 
+const HANDLING_PAYMENTS =
+  'This Application processes payments via external payment service providers (Google Play or the ' +
+  'Apple App Store). Users provide their payment details directly to such payment service providers. ' +
+  "This Application isn't involved in the collection and processing of such information: instead, it " +
+  'will only receive a notification by the relevant payment service provider as to whether payment ' +
+  'has been successfully completed.';
+
+const ADVERTISING =
+  'This type of service allows User Data to be utilised for advertising communication purposes. These ' +
+  'communications are displayed in the form of banners and other advertisements on this Application, ' +
+  'possibly based on User interests. The ad service may use Trackers and the unique device identifier ' +
+  'for advertising (the Google advertising ID, or IDFA on iOS).';
+
+const ADVERTISING_ID_RESET =
+  'Users can also reset or delete their advertising ID, or opt out of personalised ads, in their ' +
+  "device's settings (on Android: Settings, Google, Ads).";
+
 const LEGAL_BASES = [
   'Users have given their consent for one or more specific purposes;',
   'provision of Data is necessary for the performance of an agreement with the User and/or for any pre-contractual obligations thereof;',
@@ -83,6 +100,9 @@ module.exports = {
   METHODS_OF_PROCESSING,
   THIRD_PARTY_DATA,
   PROVISION_OF_DATA,
+  HANDLING_PAYMENTS,
+  ADVERTISING,
+  ADVERTISING_ID_RESET,
   NO_AUTOMATED_DECISIONS,
   LEGAL_BASES,
   LEGAL_BASIS_INTRO,
