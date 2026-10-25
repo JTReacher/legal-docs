@@ -1,0 +1,104 @@
+{
+  "app": {
+    "name": "Bin Rota",
+    "description": "rotates bin duty between the people in a household and reminds them the evening before or the morning of bin day, using collection dates from the local council",
+    "audience": "UK households who share bin duty",
+    "ios_version": "N/A",
+    "android_version": "8.0"
+  },
+  "company": {
+    "name": "John Theodore Reacher",
+    "trading_as": "TeapotSoftware",
+    "email": "teapotsoft@outlook.com",
+    "location": "United Kingdom",
+    "jurisdiction": "England and Wales"
+  },
+  "features": {
+    "subscriptions": false,
+    "in_app_purchases": false,
+    "health_data": false,
+    "user_content": true,
+    "minimum_age": 13,
+    "parental_consent_required": false
+  },
+  "privacy_policy_url": "https://jtreacher.github.io/legal-docs/privacy/generated/bin-rota.html",
+  "last_updated": "25 October 2026",
+  "privacy": {
+    "contact_email": "teapotsoft@outlook.com",
+    "summary": [
+      "Everything you enter stays on your phone. Bin Rota has no account, no server and no cloud database, and the Owner does not receive the names, numbers or settings you enter.",
+      "The app reads your contacts only when you choose someone from the contact picker, and copies only that person's name and phone number.",
+      "Reminder texts go from your own phone to the people on your rota: the direct-download version sends them as SMS, and the Google Play version hands them to your Messages app to send.",
+      "To get collection dates, the app sends a council property reference (UPRN) or calendar link to the collection service. A sample Greater Cambridge reference is pre-filled, so the app looks up dates for it when first opened until you change it.",
+      "There are no ads, analytics or trackers."
+    ],
+    "data": [
+      {
+        "type": "Rota members' names and mobile numbers (typed in or picked from your contacts)",
+        "purpose": "Show the rota, work out whose turn it is, and address the reminder texts",
+        "lawful_basis": "Legitimate interests: running the household rota you set up. The Owner never receives this data.",
+        "storage": "Only on your device, in the app's private storage",
+        "retention": "Until you remove the person, clear the app's data or uninstall the app"
+      },
+      {
+        "type": "Collection address reference (council UPRN), or the calendar link or manual pattern you enter",
+        "purpose": "Look up your bin collection dates",
+        "lawful_basis": "Legitimate interests: providing the reminders you asked for",
+        "storage": "On your device. A council reference or calendar link is sent to the service named below whenever the app looks up dates (when you open the app and before each reminder); a manual pattern never leaves the device",
+        "retention": "Until you change it, clear the app's data or uninstall the app"
+      },
+      {
+        "type": "Reminder settings and app records (reminder time, whose turn is next, the automated-message sign-off, cached collection dates and a log of the last reminder sent)",
+        "purpose": "Schedule and word the reminders",
+        "lawful_basis": "Legitimate interests: providing the reminders you asked for",
+        "storage": "Only on your device",
+        "retention": "Until you clear the app's data or uninstall the app"
+      },
+      {
+        "type": "Reminder text messages (recipient number and message text)",
+        "purpose": "Tell rota members whose turn it is and which bins are collected",
+        "lawful_basis": "Legitimate interests: providing the reminders you asked for",
+        "storage": "Direct-download version: sent as SMS from your SIM through your mobile network. Google Play version: handed to your Messages app, which may send it as SMS or as chat (RCS) depending on your settings",
+        "retention": "The app does not keep sent messages. Both versions keep a short log of the last reminder and the last test (date and whose turn it was). On the Google Play version the reminder notification also holds the message until you send or dismiss it"
+      }
+    ],
+    "permissions": [
+      {
+        "name": "Contacts (READ_CONTACTS)",
+        "reason": "Used only when you tap to pick a person from your contacts. The app reads that one contact's name and phone number and saves them to the rota. It never uploads or scans your address book."
+      },
+      {
+        "name": "Send SMS (SEND_SMS, direct-download version only)",
+        "reason": "Sends the reminder texts from your own SIM at the time you choose. Normal text charges from your network apply. The Google Play version does not ask for this: it shows a notification and opens your Messages app with the text ready for you to send."
+      },
+      {
+        "name": "Notifications",
+        "reason": "Shows reminder and status notifications on your phone. Notifications are created on the device; no push service is used."
+      },
+      {
+        "name": "Alarms, run at start-up and network access",
+        "reason": "Schedule the reminder for the right time, restore it after the phone restarts, and fetch collection dates."
+      }
+    ],
+    "third_party_services": [
+      {
+        "name": "Greater Cambridge Shared Waste Service collection calendar",
+        "purpose": "Provides bin collection dates for a gc: council reference or UPRN, including the pre-filled sample reference",
+        "data_sent": "The council property reference (UPRN) set in the app, and your device's IP address",
+        "location": "Microsoft Azure (cloud hosting used by the service)"
+      },
+      {
+        "name": "The calendar (iCal) address you enter, if any",
+        "purpose": "Provides bin collection dates from a council calendar feed",
+        "data_sent": "A request to that address, with your device's IP address",
+        "location": "Wherever that calendar is hosted"
+      }
+    ],
+    "processors": [],
+    "analytics": false,
+    "automated_decisions": false,
+    "backups": "If Android backup is turned on for your Google account, Android may include the app's settings (including rota names and numbers) in your device backup, so they can be restored to a new phone. Google stores those backups under your account and its own privacy policy; the Owner cannot see them. You can turn this off in your phone's backup settings. Separately, when you move to a new phone with Android's device-to-device transfer, the app's settings (including the rota, the collection reference, cached dates and the last-reminder log) are copied across, whatever your cloud backup setting.",
+    "deletion_note": "Because your data is only on your device, you can delete it at any time: remove people in the app, clear the app's storage in Android settings, or uninstall the app. The Owner holds no copy to delete.",
+    "data_optional": true
+  }
+}

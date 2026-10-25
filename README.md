@@ -87,7 +87,7 @@ node build.js --list
   "subscription": {
     "billing_cycle": "monthly or annual"
   },
-  "privacy_policy_url": "https://teapotsoftware.github.io/legal-docs/privacy-policy.html",
+  "privacy_policy_url": "https://jtreacher.github.io/legal-docs/privacy/generated/my-app.html",
   "last_updated": "26 January 2026"
 }
 ```
@@ -119,6 +119,35 @@ All generated EULAs include:
 - **UK GDPR Rights** (with ICO contact information)
 - **30-Day Informal Dispute Resolution**
 - **UK Consumer Rights** carve-outs
+
+## Per-app Privacy Policies
+
+Each app gets its own privacy page, built from the `privacy` block in its
+`eula/configs/<slug>.json` and published at
+`https://jtreacher.github.io/legal-docs/privacy/generated/<slug>.html`
+(that URL is the config's `privacy_policy_url`).
+
+| App | Privacy Policy |
+|-----|----------------|
+| Bin Rota | [bin-rota.html](privacy/generated/bin-rota.html) |
+
+- `privacy/clauses.js` holds the fixed wording, taken from the iubenda
+  [privacy-policy.html](privacy-policy.html). Edit clauses there, not per app.
+- `privacy/build.js` renders the app's facts (data table, permissions, services
+  contacted, processors, backups, deletion) around those clauses. Every config
+  value is HTML-escaped; a config with a missing field fails the build.
+
+- Money: `features.in_app_purchases` (one-time unlock) or `features.subscriptions`
+  adds the store payments section; list RevenueCat or Paddle under
+  `privacy.processors`. Ads: add `privacy.advertising` with `provider` (e.g.
+  Google AdMob), `withdraw_consent` (how to reopen the UMP privacy options) and
+  `policy_url` and `location`; the build fails if any is missing.
+
+```bash
+node privacy/build.js            # every config with a privacy block
+node privacy/build.js bin-rota   # one app
+node --test                      # generator tests
+```
 
 ## Contact
 

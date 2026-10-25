@@ -1,0 +1,63 @@
+{
+  "app": {
+    "name": "Sample Tracker",
+    "description": "helps users keep a daily log for a sample purpose",
+    "audience": "people who want a sample log",
+    "ios_version": "15.0",
+    "android_version": "8.0"
+  },
+  "company": {
+    "name": "Jane Q Sample",
+    "trading_as": "SampleSoft",
+    "email": "hello@samplesoft.example",
+    "location": "United Kingdom",
+    "jurisdiction": "England and Wales"
+  },
+  "features": {
+    "subscriptions": true,
+    "in_app_purchases": false,
+    "health_data": true,
+    "user_content": true,
+    "minimum_age": 13,
+    "parental_consent_required": true
+  },
+  "subscription": {
+    "billing_cycle": "monthly or annual"
+  },
+  "privacy_policy_url": "https://jtreacher.github.io/legal-docs/privacy/generated/sample-app.html",
+  "last_updated": "1 February 2026",
+  "privacy": {
+    "contact_email": "privacy@samplesoft.example",
+    "deletion_url": "https://samplesoft.example/delete-my-data",
+    "data": [
+      {
+        "type": "Symptom entries",
+        "purpose": "Show the user their own history",
+        "lawful_basis": "Explicit consent",
+        "storage": "On device and encrypted cloud backup",
+        "retention": "Until the user deletes the entry"
+      },
+      {
+        "type": "Account email address",
+        "purpose": "Sign in and account recovery",
+        "lawful_basis": "Contract",
+        "storage": "Managed database in the EU",
+        "retention": "Until the account is deleted"
+      }
+    ],
+    "processors": [
+      {
+        "name": "Neon",
+        "purpose": "Database hosting",
+        "location": "Frankfurt, Germany",
+        "policy_url": "https://neon.com/privacy-policy"
+      },
+      {
+        "name": "RevenueCat",
+        "purpose": "Subscription management",
+        "location": "United States",
+        "policy_url": "https://www.revenuecat.com/privacy"
+      }
+    ]
+  }
+}
