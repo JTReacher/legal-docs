@@ -12,7 +12,7 @@ Command: `orch legal exodus <apk>`. Debug builds were scanned because they are n
 | Play (`app-play-debug.apk`) | None | INTERNET, ACCESS_NETWORK_STATE, POST_NOTIFICATIONS, READ_CONTACTS, RECEIVE_BOOT_COMPLETED, SCHEDULE_EXACT_ALARM |
 | Sideload (`app-sideload-debug.apk`) | None | The Play list, plus SEND_SMS and USE_EXACT_ALARM (SCHEDULE_EXACT_ALARM only up to API 32) |
 
-The scanner was checked with planted AdMob and Firebase Analytics classes, and it flagged both. Every permission is explained in the policy's "Device permissions" section. Re-run the scan on the release AAB/APK before submitting.
+To check the scanner works, I matched planted AdMob and Firebase Analytics class names against the live signature list, and both were flagged. A code review then confirmed that real dex parsing flags a planted signature. Every permission is explained in the policy's "Device permissions" section. Before submitting, re-run the scan on the release build. For an AAB, build a universal APK first (`bundletool build-apks --mode=universal`) and scan that.
 
 ## 2. ICO privacy notice checklist
 
@@ -35,7 +35,7 @@ Source: the ICO "right to be informed" checklist (UK GDPR Art. 13/14).
 | Whether providing data is required, and the consequences | Yes | "Users are not obliged to provide any Data..." |
 | Source of data not obtained from the individual | Yes | Typed in or picked from the user's contacts |
 | Automated decision-making and profiling | Yes | "No automated decision-making" |
-| Concise, plain language, easy to find | Yes | "In short" summary first; linked from the Play listing |
+| Concise, plain language, easy to find | Yes, with one to-do | The "In short" summary comes first. **To do at submission:** link the policy from the Play listing |
 
 Open question for John: the ICO helpline (0303 123 1113) can confirm whether you count as a controller at all for data that never leaves the phone. The policy is written to hold up either way.
 
@@ -48,15 +48,15 @@ Play counts data as "collected" only when the app sends it off the device, and a
 | Does the app collect or share required user data types? | **Yes** | The council UPRN or iCal address is sent to the collection service |
 | Data type | Personal info → **Address** (optional) | A UPRN identifies a property. Mark it optional, because a manual pattern works without one |
 | Collected or shared? | **Collected**, not shared | Sending data to a third party because of a user action, as the user would expect, is a listed exemption from "shared" |
-| Processed ephemerally? | No | It stays in on-device settings |
+| Processed ephemerally? | No | We can't confirm that the council's service keeps requests in memory only |
 | Purpose | App functionality | |
-| Encrypted in transit? | **No, unless the app is changed** | The council lookup uses https, but a user-typed `http://` iCal link is fetched as is. Recommended: make the app accept only https, then answer Yes |
-| Can users request deletion? | Yes | Everything is on the device: remove it in the app, clear storage, or uninstall |
+| Encrypted in transit? | **Yes** | The council lookup uses https. The app targets SDK 36 and doesn't opt into cleartext, so Android blocks `http://` iCal links and nothing is sent unencrypted |
+| Can users request deletion? | **John to decide** | The only "collected" data is the lookup request, which reaches the council's service. Neither the user nor the Owner can have that deleted. Everything else is on the device, where the user deletes it. Check Play's help text: answer "No", or "Yes" with that reason |
 | Contacts, phone numbers, SMS | **Not declared** | They are read and stored only on the device, and never sent off it by the app. Texts go via the user's own Messages app or SIM |
 | Independent security review | No | |
 
 ## Outcome
 
-The policy matches the app on all three checks once the transfers statement in this PR is added. Two items need John:
+With the transfers statement in this PR, the policy matches the app on all three checks. Two items need John:
 1. Approve the transfers wording.
-2. Decide whether to make the app accept only https iCal links (it lets the Data safety form say "encrypted in transit").
+2. Choose the Data safety deletion answer (see the table above).

@@ -134,7 +134,7 @@ Each app gets its own privacy page, built from the `privacy` block in its
 - `privacy/clauses.js` holds the fixed wording, taken from the iubenda
   [privacy-policy.html](privacy-policy.html). Edit clauses there, not per app.
 - `privacy/build.js` renders the app's facts (data table, permissions, services
-  contacted, processors, backups, deletion) around those clauses. Every config
+  contacted, processors, international transfers, backups, deletion) around those clauses. Every config
   value is HTML-escaped; a config with a missing field fails the build.
 
 - Money: `features.in_app_purchases` (one-time unlock) or `features.subscriptions`
