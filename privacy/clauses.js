@@ -16,6 +16,14 @@ const THIRD_PARTY_DATA =
   'Users are responsible for any third-party Personal Data obtained, published or shared through ' +
   'this Application.';
 
+const PROVISION_OF_DATA =
+  'Users are not obliged to provide any Data. Where this Application needs some Data for a feature, ' +
+  'failing to provide it may make that feature impossible to use.';
+
+const NO_AUTOMATED_DECISIONS =
+  'This Application carries out no automated decision-making, including profiling, that produces ' +
+  'legal or similarly significant effects for Users.';
+
 const LEGAL_BASES = [
   'Users have given their consent for one or more specific purposes;',
   'provision of Data is necessary for the performance of an agreement with the User and/or for any pre-contractual obligations thereof;',
@@ -74,6 +82,8 @@ const NOT_CONTAINED =
 module.exports = {
   METHODS_OF_PROCESSING,
   THIRD_PARTY_DATA,
+  PROVISION_OF_DATA,
+  NO_AUTOMATED_DECISIONS,
   LEGAL_BASES,
   LEGAL_BASIS_INTRO,
   LEGAL_BASIS_OUTRO,

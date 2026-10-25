@@ -110,7 +110,7 @@ function dataSection(privacy) {
   const table =
     '<table>\n  <tr><th>Data</th><th>Purpose</th><th>Legal basis</th><th>Place of processing</th><th>Retention time</th></tr>\n' +
     `${rows}\n</table>`;
-  return section('Types of Data collected and how they are processed', table + '\n' + para(C.THIRD_PARTY_DATA));
+  return section('Types of Data collected and how they are processed', table + '\n' + para(C.PROVISION_OF_DATA) + '\n' + para(C.THIRD_PARTY_DATA));
 }
 
 function processingSection() {
@@ -196,6 +196,11 @@ function analyticsSection(privacy) {
   );
 }
 
+function automatedDecisionsSection(privacy) {
+  if (privacy.automated_decisions !== false) return '';
+  return section('Automated decision-making', para(C.NO_AUTOMATED_DECISIONS));
+}
+
 function paymentsSection(config) {
   if (!config.features || !config.features.subscriptions) return '';
   return section(
@@ -267,6 +272,7 @@ function renderPrivacy(config) {
     servicesSection(privacy),
     processorsSection(privacy),
     analyticsSection(privacy),
+    automatedDecisionsSection(privacy),
     paymentsSection(config),
     notesSection('Backups', privacy.backups),
     deletionSection(privacy),

@@ -96,6 +96,7 @@
     ],
     "processors": [],
     "analytics": false,
+    "automated_decisions": false,
     "backups": "If Android backup is turned on for your Google account, Android may include the app's settings (including rota names and numbers) in your device backup, so they can be restored to a new phone. Google stores those backups under your account and its own privacy policy; the Owner cannot see them. You can turn this off in your phone's backup settings.",
     "deletion_note": "Because your data is only on your device, you can delete it at any time: remove people in the app, clear the app's storage in Android settings, or uninstall the app. The Owner holds no copy to delete."
   }
