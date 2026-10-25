@@ -32,7 +32,7 @@ const ADVERTISING_FIELDS = ['provider', 'withdraw_consent', 'policy_url', 'locat
 const BOOLEAN_KEYS = ['analytics', 'automated_decisions', 'data_optional'];
 const PRIVACY_KEYS = [
   'contact_email', 'deletion_url', 'deletion_note', 'summary', 'data', 'processors',
-  'third_party_services', 'permissions', 'advertising', 'backups', ...BOOLEAN_KEYS,
+  'third_party_services', 'permissions', 'advertising', 'backups', 'transfers', ...BOOLEAN_KEYS,
 ];
 
 function checkKeys(privacy) {
@@ -345,6 +345,7 @@ function renderPrivacy(config) {
     advertisingSection(privacy),
     automatedDecisionsSection(privacy),
     paymentsSection(config),
+    notesSection('International transfers', privacy.transfers),
     notesSection('Backups', privacy.backups),
     deletionSection(privacy),
     rightsSection(privacy),
