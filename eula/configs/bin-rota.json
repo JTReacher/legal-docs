@@ -99,6 +99,7 @@
     "automated_decisions": false,
     "backups": "If Android backup is turned on for your Google account, Android may include the app's settings (including rota names and numbers) in your device backup, so they can be restored to a new phone. Google stores those backups under your account and its own privacy policy; the Owner cannot see them. You can turn this off in your phone's backup settings. Separately, when you move to a new phone with Android's device-to-device transfer, the app's settings (including the rota, the collection reference, cached dates and the last-reminder log) are copied across, whatever your cloud backup setting.",
     "deletion_note": "Because your data is only on your device, you can delete it at any time: remove people in the app, clear the app's storage in Android settings, or uninstall the app. The Owner holds no copy to delete.",
-    "data_optional": true
+    "data_optional": true,
+    "transfers": "The Owner does not transfer your data anywhere, inside or outside the UK, because it never receives it. The services the app contacts (listed above) may process requests outside the UK, and Google may store your device backups outside the UK, under their own safeguards."
   }
 }

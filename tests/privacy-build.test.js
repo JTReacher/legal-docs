@@ -595,3 +595,23 @@ test('advertising section states consent basis and location', () => {
   assert.match(adSection, /only with (the User's|your) consent/i);
   assert.ok(adSection.includes('United States'), 'missing location');
 });
+
+// Test: a transfers statement renders under an International transfers heading
+// Pins: the ICO checklist item on transfers outside the UK is covered when configured
+// Green when: privacy.transfers text appears under an "International transfers" heading, escaped
+// Benefit: users learn whether their data leaves the UK and on what safeguards
+test('transfers -> International transfers section with escaped text', () => {
+  const html = render((c) => {
+    c.privacy.transfers = 'No transfers <b>by us</b>.';
+  });
+
+  assert.match(html, /<h2>International transfers<\/h2>\s*<p>No transfers &lt;b&gt;by us&lt;\/b&gt;\.<\/p>/);
+});
+
+// Test: without transfers there is no International transfers heading
+// Pins: the section only appears when the config states something
+// Green when: no "International transfers" heading in default output
+// Benefit: no empty or guessed transfer statement is published
+test('no transfers -> no International transfers heading', () => {
+  assert.ok(!render().includes('International transfers'));
+});
